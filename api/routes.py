@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import timedelta
@@ -46,13 +45,13 @@ def register_user(user: schemas.UsuarioCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 @router.post("/token", response_model=schemas.Token, summary="Login para obter token")
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login_for_access_token(login_form: schemas.LoginForm, db: Session = Depends(get_db)):
     """
     Autentica o usuário e retorna um token JWT.
     - **username**: Nome de usuário
     - **password**: Senha do usuário
     """
-    user = crud.authenticate_user(db, form_data.username, form_data.password)
+    user = crud.authenticate_user(db, login_form.username, login_form.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

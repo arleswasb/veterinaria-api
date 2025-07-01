@@ -26,6 +26,10 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Optional[str] = None
 
+class LoginForm(BaseModel):
+    username: str
+    password: str
+
 class UserInDB(Usuario):
     hashed_password: str
 
