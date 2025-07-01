@@ -15,6 +15,7 @@ Sistema completo para gerenciar clínicas veterinárias, veterinários, tutores,
 - [Como Executar](#-como-executar)
 - [Estrutura do Projeto](#-estrutura-do-projeto)
 - [Endpoints da API](#-endpoints-da-api)
+- [Autenticação](#-autenticação)
 - [Exemplos de Uso](#-exemplos-de-uso)
 - [Banco de Dados](#-banco-de-dados)
 - [Desenvolvimento](#-desenvolvimento)
@@ -32,12 +33,15 @@ Sistema completo para gerenciar clínicas veterinárias, veterinários, tutores,
 
 ### **Dependências Principais:**
 ```
-fastapi==0.104.1          # Framework web
-uvicorn[standard]==0.24.0  # Servidor ASGI
-sqlalchemy==2.0.23        # ORM
-psycopg2-binary==2.9.9     # Driver PostgreSQL
-pydantic==2.5.0           # Validação de dados
-pydantic-settings==2.1.0  # Configurações
+fastapi==0.104.1              # Framework web
+uvicorn[standard]==0.24.0      # Servidor ASGI
+sqlalchemy==2.0.23            # ORM
+psycopg2-binary==2.9.9         # Driver PostgreSQL
+pydantic==2.5.0               # Validação de dados
+pydantic-settings==2.1.0      # Configurações
+python-jose[cryptography]==3.3.0  # JWT tokens
+passlib[bcrypt]==1.7.4         # Hash de senhas
+bcrypt==4.0.1                  # Algoritmo de hash
 ```
 
 ## 📋 Pré-requisitos
@@ -199,10 +203,17 @@ veterinaria_project/
 
 ## 🌐 Endpoints da API
 
+### **🔐 Autenticação**
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `POST` | `/api/register` | Registrar novo usuário |
+| `POST` | `/api/token` | Login e obter token JWT |
+| `GET` | `/api/users/me` | Obter dados do usuário autenticado |
+
 ### **🏥 Clínicas**
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| `POST` | `/api/clinicas` | Cadastrar nova clínica |
+| `POST` | `/api/clinicas` | Cadastrar nova clínica (requer autenticação) |
 | `GET` | `/api/clinicas` | Listar todas as clínicas |
 | `GET` | `/api/clinicas/{id}` | Buscar clínica específica |
 | `GET` | `/api/clinicas/{id}/veterinarios` | Listar veterinários da clínica |
@@ -233,12 +244,55 @@ veterinaria_project/
 | `POST` | `/api/atendimentos` | Registrar novo atendimento |
 | `GET` | `/api/atendimentos` | Listar todos os atendimentos |
 
+## 🔐 Autenticação
+
+O sistema implementa autenticação JWT para proteger endpoints sensíveis. 
+
+### **Usuários de Exemplo:**
+- **admin** / **admin123** - Usuário administrador
+- **demo** / **demo123** - Usuário de demonstração
+
+### **Fluxo de Autenticação:**
+1. **Registrar** novo usuário via `/api/register`
+2. **Fazer login** via `/api/token` para obter token JWT
+3. **Usar token** no header `Authorization: Bearer {token}` para acessar endpoints protegidos
+
+### **Documentação Completa:**
+📖 Veja o arquivo [AUTHENTICATION.md](./AUTHENTICATION.md) para guia completo de autenticação com exemplos práticos.
+
 ## 📝 Exemplos de Uso
 
-### **1. Criar Clínica**
+### **1. Registrar Usuário**
+```bash
+curl -X POST "http://127.0.0.1:8000/api/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "joao123",
+    "email": "joao@email.com",
+    "password": "minhasenha123"
+  }'
+```
+
+### **2. Fazer Login e Obter Token**
+```bash
+curl -X POST "http://127.0.0.1:8000/api/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=admin&password=admin123"
+```
+
+**Resposta:**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer"
+}
+```
+
+### **3. Criar Clínica (com autenticação)**
 ```bash
 curl -X POST "http://127.0.0.1:8000/api/clinicas" \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SEU_TOKEN_AQUI" \
   -d '{
     "nome": "Clínica VetLife",
     "cidade": "São Paulo", 
@@ -246,7 +300,7 @@ curl -X POST "http://127.0.0.1:8000/api/clinicas" \
   }'
 ```
 
-### **2. Criar Veterinário**
+### **4. Criar Veterinário**
 ```bash
 curl -X POST "http://127.0.0.1:8000/api/veterinarios" \
   -H "Content-Type: application/json" \
@@ -259,7 +313,7 @@ curl -X POST "http://127.0.0.1:8000/api/veterinarios" \
   }'
 ```
 
-### **3. Criar Pet**
+### **5. Criar Pet**
 ```bash
 curl -X POST "http://127.0.0.1:8000/api/pets" \
   -H "Content-Type: application/json" \
@@ -272,7 +326,7 @@ curl -X POST "http://127.0.0.1:8000/api/pets" \
   }'
 ```
 
-### **4. Listar Clínicas**
+### **6. Listar Clínicas**
 ```bash
 curl -X GET "http://127.0.0.1:8000/api/clinicas"
 ```
@@ -280,6 +334,15 @@ curl -X GET "http://127.0.0.1:8000/api/clinicas"
 ## 🗄️ Banco de Dados
 
 ### **Modelo de Dados**
+
+#### **Usuário**
+- `id` - Identificador único
+- `username` - Nome de usuário (único)
+- `email` - E-mail do usuário (único)
+- `hashed_password` - Senha hasheada com bcrypt
+- `is_active` - Status do usuário (ativo/inativo)
+- `created_at` - Data de criação
+- `updated_at` - Data de última atualização
 
 #### **Clínica**
 - `id` - Identificador único

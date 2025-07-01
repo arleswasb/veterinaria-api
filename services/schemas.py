@@ -1,6 +1,33 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 import datetime
+
+# Schemas para Usuario e Autenticação
+class UsuarioBase(BaseModel):
+    username: str
+    email: str
+
+class UsuarioCreate(UsuarioBase):
+    password: str
+
+class Usuario(UsuarioBase):
+    id: int
+    is_active: bool
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
+    class Config:
+        from_attributes = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
+
+class UserInDB(Usuario):
+    hashed_password: str
 
 # Schemas para Pet
 class PetBase(BaseModel):

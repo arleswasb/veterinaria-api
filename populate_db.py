@@ -6,7 +6,8 @@ para demonstração da API veterinária.
 
 from sqlalchemy.orm import sessionmaker
 from database import engine
-from models.models import Clinica, Veterinario, Tutor, Pet, Atendimento
+from models.models import Usuario, Clinica, Veterinario, Tutor, Pet, Atendimento
+from services.auth import get_password_hash
 import datetime
 
 # Criar uma sessão
@@ -20,9 +21,32 @@ def create_sample_data():
     
     try:
         # Verificar se já existem dados
-        if db.query(Clinica).first():
+        if db.query(Usuario).first():
             print("⚠️  Dados já existem no banco. Pulando criação de exemplos.")
             return
+        
+        # Criar usuário administrador
+        admin_user = Usuario(
+            username="admin",
+            email="admin@veterinaria.com",
+            hashed_password=get_password_hash("admin123"),
+            is_active=True
+        )
+        
+        user_demo = Usuario(
+            username="demo",
+            email="demo@veterinaria.com",
+            hashed_password=get_password_hash("demo123"),
+            is_active=True
+        )
+        
+        db.add(admin_user)
+        db.add(user_demo)
+        db.commit()
+        
+        print("✅ Usuários criados:")
+        print("   - admin (senha: admin123)")
+        print("   - demo (senha: demo123)")
         
         # Criar clínicas
         clinica1 = Clinica(

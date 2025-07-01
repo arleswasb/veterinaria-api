@@ -1,6 +1,40 @@
 from sqlalchemy.orm import Session
 from models import models
 from services import schemas
+from services.auth import get_password_hash
+
+# --- CRUD para Usuario ---
+
+def get_user_by_username(db: Session, username: str):
+    """Busca um usuário pelo username."""
+    return db.query(models.Usuario).filter(models.Usuario.username == username).first()
+
+def get_user_by_email(db: Session, email: str):
+    """Busca um usuário pelo email."""
+    return db.query(models.Usuario).filter(models.Usuario.email == email).first()
+
+def create_user(db: Session, user: schemas.UsuarioCreate):
+    """Cria um novo usuário com senha hasheada."""
+    hashed_password = get_password_hash(user.password)
+    db_user = models.Usuario(
+        username=user.username,
+        email=user.email,
+        hashed_password=hashed_password
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+def authenticate_user(db: Session, username: str, password: str):
+    """Autentica um usuário verificando username e senha."""
+    from services.auth import verify_password
+    user = get_user_by_username(db, username)
+    if not user:
+        return False
+    if not verify_password(password, user.hashed_password):
+        return False
+    return user
 
 # --- CRUD para Clinica ---
 

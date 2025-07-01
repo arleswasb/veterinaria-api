@@ -1,23 +1,85 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import timedelta
 
 from services import schemas
 from repository import crud
 from database import get_db
 from services import veterinario_service # Importar o novo serviço
+from services.auth import create_access_token
+from services.dependencies import get_current_active_user
+from config import settings
 
 router = APIRouter(
     prefix="/api",
     tags=["veterinaria"]
 )
 
+# --- Endpoints para Autenticação ---
+
+@router.post("/register", response_model=schemas.Usuario, status_code=201, summary="Registrar novo usuário")
+def register_user(user: schemas.UsuarioCreate, db: Session = Depends(get_db)):
+    """
+    Registra um novo usuário no sistema.
+    - **username**: Nome de usuário único
+    - **email**: Email único do usuário
+    - **password**: Senha do usuário
+    """
+    # Verificar se username já existe
+    db_user = crud.get_user_by_username(db, username=user.username)
+    if db_user:
+        raise HTTPException(
+            status_code=400,
+            detail="Username já está registrado"
+        )
+    
+    # Verificar se email já existe
+    db_user = crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(
+            status_code=400,
+            detail="Email já está registrado"
+        )
+    
+    return crud.create_user(db=db, user=user)
+
+@router.post("/token", response_model=schemas.Token, summary="Login para obter token")
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    """
+    Autentica o usuário e retorna um token JWT.
+    - **username**: Nome de usuário
+    - **password**: Senha do usuário
+    """
+    user = crud.authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Username ou senha incorretos",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
+    access_token = create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/users/me", response_model=schemas.Usuario, summary="Obter dados do usuário atual")
+async def read_users_me(current_user: schemas.Usuario = Depends(get_current_active_user)):
+    """Retorna os dados do usuário autenticado."""
+    return current_user
+
 # --- Endpoints para Clínicas ---
 
 @router.post("/clinicas", response_model=schemas.Clinica, status_code=201, summary="Cadastrar nova clínica")
-def create_clinica_endpoint(clinica: schemas.ClinicaCreate, db: Session = Depends(get_db)):
+def create_clinica_endpoint(
+    clinica: schemas.ClinicaCreate, 
+    db: Session = Depends(get_db),
+    current_user: schemas.Usuario = Depends(get_current_active_user)
+):
     """
-    Cadastra uma nova clínica no sistema.
+    Cadastra uma nova clínica no sistema. Requer autenticação.
     - **nome**: Nome da clínica.
     - **cidade**: Cidade onde a clínica está localizada.
     - **endereco**: Endereço completo da clínica.

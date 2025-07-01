@@ -6,7 +6,7 @@ Funciona com SQLite (desenvolvimento) e PostgreSQL (produção).
 """
 
 from database import engine, Base, DATABASE_URL
-from models.models import Clinica, Veterinario, Tutor, Pet, Atendimento
+from models.models import Usuario, Clinica, Veterinario, Tutor, Pet, Atendimento
 from config import settings
 
 def init_database():
@@ -21,6 +21,7 @@ def init_database():
         
         print("✅ Tabelas criadas com sucesso!")
         print("📋 Tabelas criadas:")
+        print("   - usuarios (Usuários)")
         print("   - clinicas (Clínicas)")
         print("   - veterinarios (Veterinários)") 
         print("   - tutores (Tutores)")
