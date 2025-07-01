@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     
     # Configurações PostgreSQL (quando necessário)
     postgres_user: str = "postgres"
-    postgres_password: str = "password"
+    postgres_password: str = "postarl"
     postgres_host: str = "localhost"
     postgres_port: str = "5432"
     postgres_db: str = "veterinaria_db"
@@ -34,5 +34,6 @@ class Settings(BaseSettings):
     
     class Config:
         env_file = ".env"
+        env_file_encoding = "utf-8"
 
 settings = Settings()

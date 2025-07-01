@@ -1,23 +1,38 @@
-# 🚀 Deploy no GitHub - API Veterinária
+# 🚀 Como Criar Repositório no GitHub
 
-## 📋 Passos para criar repositório no GitHub
+## ⚠️ IMPORTANTE: Siga estes passos exatos
 
-### 1. **Criar repositório no GitHub.com**
-1. Acesse [GitHub.com](https://github.com)
-2. Clique em "New repository" (botão verde)
-3. Configure o repositório:
+### Passo 1: Criar repositório no GitHub
+1. **Acesse**: https://github.com/new
+2. **Configure**:
    - **Repository name**: `veterinaria-api`
    - **Description**: `API de Gerenciamento de Clínicas Veterinárias - FastAPI + PostgreSQL + SQLAlchemy`
-   - **Visibility**: Público ou Privado (sua escolha)
-   - ❌ **NÃO** marque "Add a README file" (já temos)
-   - ❌ **NÃO** adicione .gitignore (já temos)
-   - ❌ **NÃO** escolha licença agora
-4. Clique em "Create repository"
+   - **Visibility**: Public ✅
+   - **❌ NÃO marque nenhuma das opções**:
+     - ❌ Add a README file
+     - ❌ Add .gitignore  
+     - ❌ Choose a license
+3. **Clique "Create repository"**
 
-### 2. **Conectar repositório local ao GitHub**
+### Passo 2: Após criar, execute no terminal:
 ```bash
-# Adicionar origin remoto (substitua SEU_USUARIO pelo seu username)
-git remote add origin https://github.com/SEU_USUARIO/veterinaria-api.git
+# Adicionar remote origin
+git remote add origin https://github.com/arleswasb/veterinaria-api.git
+
+# Verificar branch
+git branch -M main
+
+# Fazer push
+git push -u origin main
+```
+
+## 📊 Status Atual:
+- ✅ Git inicializado
+- ✅ Primeiro commit realizado  
+- ✅ Arquivos preparados
+- ⏳ **Aguardando criação do repositório no GitHub**
+
+**👆 Após criar o repositório, execute os comandos do Passo 2!**
 
 # Verificar se foi adicionado
 git remote -v
