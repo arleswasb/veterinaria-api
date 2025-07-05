@@ -80,14 +80,18 @@ python -m venv venv
 
 # Ativar ambiente virtual
 # Windows
-venv\Scripts\activate
-# macOS/Linux
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+venv\Scripts\Activate.ps1
+#Linux
 source venv/bin/activate
 ```
 
 ### 3. **Instalar dependências**
 ```bash
+
 pip install -r requirements.txt
+
+uvicorn main:app --reload
 ```
 
 ### 4. **Configurar PostgreSQL**
