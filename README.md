@@ -72,8 +72,12 @@ git --version
 git clone https://github.com/arleswasb/veterinaria-api.git
 cd veterinaria-api
 ```
+### 2. **Ativar o docker desktop**
+```bash
+##########
+```
 
-### 2. **Criar ambiente virtual (recomendado)**
+### 3. **Criar ambiente virtual (recomendado)**
 ```bash
 # Criar ambiente virtual
 python -m venv venv
@@ -86,7 +90,7 @@ venv\Scripts\Activate.ps1
 source venv/bin/activate
 ```
 
-### 3. **Instalar dependências**
+### 4. **Instalar dependências**
 ```bash
 
 pip install -r requirements.txt
@@ -94,7 +98,10 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-### 4. **Configurar PostgreSQL**
+### 5. **Configurar PostgreSQL**
+```
+###**Abra um novo terminal**
+```
 
 #### Opção A: Configuração Automática
 ```bash
@@ -114,14 +121,10 @@ CREATE DATABASE veterinaria_db;
 \q
 ```
 
-### 5. **Configurar variáveis de ambiente**
+### 6. **Configurar variáveis de ambiente**
 ```bash
 # Copiar arquivo de exemplo
 cp .env.example .env
-
-# Editar .env com suas configurações
-# Windows: notepad .env
-# macOS/Linux: nano .env
 ```
 
 **Conteúdo do `.env`:**
@@ -143,7 +146,7 @@ POSTGRES_PORT=5432
 POSTGRES_DB=veterinaria_db
 ```
 
-### 6. **Inicializar banco de dados**
+### 7. **Inicializar banco de dados**
 ```bash
 # Criar tabelas
 python init_db.py
