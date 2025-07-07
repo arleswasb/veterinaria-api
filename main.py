@@ -21,7 +21,7 @@ app = FastAPI(
     # Configura a documentação para usar o prefixo /api
     docs_url="/docs",
     redoc_url="/redoc",
-    openapi_url="/api/openapi.json"
+    openapi_url="/openapi.json"  # Removido o prefixo /api para evitar conflitos
 )
 
 # Middleware de logging (opcional para debugging)
