@@ -1,18 +1,17 @@
 # veterinaria/main.py
 
 from fastapi import FastAPI
-from api import routes
-from database import engine
-from models import models
-from config import settings
+from fastapi.exceptions import RequestValidationError
+from sqlalchemy.exc import IntegrityError
 
-# Esta linha cria as tabelas no banco de dados com base nos seus modelos SQLAlchemy
-# É executada apenas uma vez quando a aplicação inicia
-try:
-    models.Base.metadata.create_all(bind=engine)
-except Exception as e:
-    print(f"Aviso: Não foi possível criar as tabelas automaticamente: {e}")
-    print("Certifique-se de que o banco de dados está configurado corretamente.")
+from api import routes
+from config import settings
+from api import exception_handlers
+import logging
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title=settings.app_name,
@@ -22,12 +21,31 @@ app = FastAPI(
     # Configura a documentação para usar o prefixo /api
     docs_url="/docs",
     redoc_url="/redoc",
-    openapi_url="/api/openapi.json" 
+    openapi_url="/openapi.json"  # Removido o prefixo /api para evitar conflitos
 )
 
+# Middleware de logging (opcional para debugging)
+if settings.debug:
+    @app.middleware("http")
+    async def log_requests(request, call_next):
+        logger.info(f"📡 {request.method} {request.url}")
+        response = await call_next(request)
+        logger.info(f"📤 Status: {response.status_code}")
+        return response
+
+# Adiciona os handlers de exceção customizados
+app.add_exception_handler(RequestValidationError, exception_handlers.validation_exception_handler)
+app.add_exception_handler(IntegrityError, exception_handlers.integrity_error_handler)
+
 # Inclui o roteador da API com o prefixo /api
-app.include_router(routes.router)
+app.include_router(routes.router, prefix="/api")
 
 @app.get("/", tags=["Root"])
 def read_root():
-    return {"message": "Bem-vindo à API de Clínicas Veterinárias. Acesse /docs para ver a documentação."}
+    """Endpoint raiz da API com informações básicas."""
+    return {
+        "message": "Bem-vindo à API de Clínicas Veterinárias. Acesse /docs para ver a documentação.",
+        "version": settings.app_version,
+        "docs_url": "/docs",
+        "health_check": "/api/health",
+    }

@@ -9,14 +9,14 @@ class Settings(BaseSettings):
     
     # Configurações PostgreSQL (quando necessário)
     postgres_user: str = "postgres"
-    postgres_password: str = "postarl"
+    postgres_password: str = "veterinaria123"
     postgres_host: str = "localhost"
     postgres_port: str = "5432"
     postgres_db: str = "veterinaria_db"
     
     # Configurações da aplicação
     app_name: str = "API de Gerenciamento de Clínicas Veterinárias"
-    app_version: str = "1.0.0"
+    app_version: str = "2.0.0"
     debug: bool = True
     environment: str = "development"  # development, production
     

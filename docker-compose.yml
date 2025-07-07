@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Serviço do Banco de Dados PostgreSQL
+  db:
+    image: postgres:16-alpine  # Usando uma imagem leve do Postgres
+    container_name: veterinaria_db
+    environment:
+      POSTGRES_DB: veterinaria_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: veterinaria123
+      POSTGRES_HOST_AUTH_METHOD: md5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432" # Mapeia a porta do contêiner para a do host
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d veterinaria_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Serviço da Aplicação FastAPI
+  app:
+    container_name: veterinaria_api
+    build: .  # Constrói a imagem a partir do Dockerfile na pasta atual
+    command: ./entrypoint.sh # Comando para iniciar o serviço
+    environment:
+      DATABASE_URL: postgresql://postgres:veterinaria123@db:5432/veterinaria_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: veterinaria123
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: veterinaria_db
+      ENVIRONMENT: development
+      DEBUG: "true"
+      SECRET_KEY: "sua-chave-secreta-super-segura-para-docker-123456789"
+    volumes:
+      - .:/app # Mapeia o código local para o contêiner para live-reloading
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy # Aguarda o banco estar saudável
+
+volumes:
+  postgres_data:
