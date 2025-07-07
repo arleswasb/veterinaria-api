@@ -1,5 +1,9 @@
 GUIA RÁPIDO - API VETERINÁRIA
 =============================
+Github
+https://github.com/arleswasb/veterinaria-api.git
+clonar repositorio
+abrir terminal
 
 📋 REQUISITOS
 - Docker Desktop instalado e rodando

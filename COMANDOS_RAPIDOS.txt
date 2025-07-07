@@ -2,6 +2,8 @@ COMANDOS RÁPIDOS - API VETERINÁRIA
 ====================================
 Github
 https://github.com/arleswasb/veterinaria-api.git
+clonar repositorio
+abrir terminal
 
 🟢 INICIAR
 docker-compose up -d
