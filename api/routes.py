@@ -5,6 +5,7 @@ from .routers import (
     clinicas,
     pets,
     tutores,
+    usuarios,
     veterinarios,
 )
 from config import settings
@@ -14,6 +15,7 @@ router = APIRouter()
 
 # Agrega os roteadores de cada entidade
 router.include_router(auth.router)
+router.include_router(usuarios.router)
 router.include_router(clinicas.router)
 router.include_router(veterinarios.router)
 router.include_router(tutores.router)

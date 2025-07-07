@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     
     # Configurações PostgreSQL (quando necessário)
     postgres_user: str = "postgres"
-    postgres_password: str = "postarl"
+    postgres_password: str = "veterinaria123"
     postgres_host: str = "localhost"
     postgres_port: str = "5432"
     postgres_db: str = "veterinaria_db"
