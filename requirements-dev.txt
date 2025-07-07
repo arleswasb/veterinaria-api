@@ -1,0 +1,36 @@
+# === DEPENDÊNCIAS DE DESENVOLVIMENTO ===
+
+# Inclui todas as dependências principais
+-r requirements.txt
+
+# === FERRAMENTAS DE DESENVOLVIMENTO ===
+
+# Formatação de código
+black==24.12.0
+
+# Linting e análise estática
+flake8==7.1.1
+mypy==1.14.1
+
+# Testes
+pytest==8.3.4
+pytest-asyncio==0.24.0
+pytest-cov==6.0.0  # Coverage de testes
+httpx==0.28.1       # Cliente HTTP assíncrono para testes
+
+# === FERRAMENTAS ADICIONAIS ===
+
+# Documentação
+mkdocs==1.6.1
+mkdocs-material==9.6.6
+
+# Debugging
+ipdb==0.13.13       # Debugger melhorado
+rich==13.9.8        # Output colorido no terminal
+
+# Análise de dependências
+pip-tools==7.4.1    # Para gerar requirements.txt precisos
+safety==3.3.1       # Verificação de vulnerabilidades
+
+# Pré-commit hooks
+pre-commit==4.0.1   # Para hooks de git

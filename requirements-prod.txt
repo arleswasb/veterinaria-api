@@ -1,0 +1,35 @@
+# === DEPENDÊNCIAS DE PRODUÇÃO ===
+# Versões fixas para máxima estabilidade
+
+# FastAPI e servidor ASGI
+fastapi==0.116.0
+uvicorn[standard]==0.35.0
+
+# Banco de dados
+sqlalchemy==2.0.41
+psycopg2-binary==2.9.10
+
+# Validação e configurações
+pydantic==2.11.7
+pydantic-settings==2.10.1
+email-validator==2.2.0
+
+# Autenticação e segurança
+python-jose[cryptography]==3.5.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.3.0
+
+# Utilidades essenciais
+python-multipart==0.0.20
+python-dotenv==1.1.1
+
+# === DEPENDÊNCIAS DE MONITORAMENTO (OPCIONAIS) ===
+# Descomente se necessário em produção:
+
+# Monitoramento e observabilidade
+# sentry-sdk[fastapi]==2.21.0  # Monitoramento de erros
+# prometheus-fastapi-instrumentator==7.0.0  # Métricas Prometheus
+
+# Performance
+# gunicorn==23.0.0  # Servidor WSGI para produção
+# redis==5.2.1      # Cache em memória
