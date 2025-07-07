@@ -207,10 +207,9 @@ def test_crud_operations(token: str) -> Dict[str, Any]:
     
     # Teste de criação de clínica
     clinica_data = {
-        "nome": "Clínica Teste API",
-        "endereco": "Rua Teste, 123",
-        "telefone": "(11) 9999-9999",
-        "email": "teste@clinica.com"
+        "nome": "Clínica API Teste",
+        "cidade": "São Paulo",
+        "endereco": "Rua Teste da API, 123"
     }
     
     result = test_endpoint(
@@ -240,10 +239,9 @@ def test_crud_operations(token: str) -> Dict[str, Any]:
             
             # Atualizar clínica
             update_data = {
-                "nome": "Clínica Teste API - Atualizada",
-                "endereco": "Rua Teste Atualizada, 456",
-                "telefone": "(11) 8888-8888",
-                "email": "teste.atualizado@clinica.com"
+                "nome": "Clínica API Teste - Atualizada",
+                "cidade": "Rio de Janeiro",
+                "endereco": "Rua Teste Atualizada, 456"
             }
             
             result = test_endpoint(
