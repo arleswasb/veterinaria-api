@@ -1,0 +1,95 @@
+GUIA RÁPIDO - API VETERINÁRIA
+=============================
+
+📋 REQUISITOS
+- Docker Desktop instalado e rodando
+- Python 3.11+ instalado
+- Terminal/Prompt de comando
+
+🚀 COMO USAR (PASSO A PASSO)
+
+1. INICIAR O DOCKER
+   - Abra o Docker Desktop
+   - Aguarde até aparecer "Docker Desktop is running"
+
+2. ABRIR TERMINAL
+   - Windows: Pressione Win + R, digite "powershell" e Enter
+   - Mac/Linux: Abra o Terminal
+   - Navegue até a pasta do projeto:
+     cd caminho/para/veterinaria-api
+
+3. INICIAR A API
+   Digite no terminal:
+   docker-compose up -d
+
+   Aguarde aparecer:
+   ✔ Container veterinaria_api   Started
+   ✔ Container veterinaria_db    Started
+
+4. VERIFICAR SE ESTÁ FUNCIONANDO
+   Abra seu navegador e acesse:
+   http://localhost:8000
+   
+   Deve aparecer: "Bem-vindo à API de Clínicas Veterinárias"
+
+5. RODAR OS TESTES COMPLETOS
+   No terminal, digite:
+   python test_all_endpoints.py
+
+   O teste vai mostrar:
+   - ✅ Verde = Funcionando
+   - ❌ Vermelho = Erro
+   - Meta: 100% de sucesso
+
+6. VER DOCUMENTAÇÃO DA API
+   Abra no navegador:
+   http://localhost:8000/docs
+
+🛑 PARAR A API
+   No terminal, digite:
+   docker-compose down
+
+⚠️ PROBLEMAS COMUNS
+
+ERRO: "Docker não encontrado"
+→ Instale o Docker Desktop
+
+ERRO: "Porta 8000 em uso"
+→ Digite: docker-compose down
+→ Depois: docker-compose up -d
+
+ERRO: "python não encontrado"
+→ Instale Python 3.11+
+→ Ou use: python3 test_all_endpoints.py
+
+ERRO: "requests module not found"
+→ Digite: pip install requests
+
+🎯 O QUE ESPERAR DOS TESTES
+
+✅ SUCESSO (100%):
+- 20 testes passando
+- "Taxa de sucesso: 100.0% - EXCELENTE!"
+- API pronta para uso
+
+❌ PROBLEMA:
+- Menos de 100% de sucesso
+- Verifique se Docker está rodando
+- Verifique se não há outros serviços na porta 8000
+
+📞 COMANDOS ÚTEIS
+
+Ver status dos containers:
+docker ps
+
+Ver logs da API:
+docker logs veterinaria_api
+
+Reiniciar tudo:
+docker-compose restart
+
+Parar tudo:
+docker-compose down
+
+🏁 PRONTO!
+Se os testes mostram 100% de sucesso, sua API está funcionando perfeitamente!

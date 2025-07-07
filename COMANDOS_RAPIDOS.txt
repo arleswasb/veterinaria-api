@@ -1,0 +1,20 @@
+COMANDOS RÁPIDOS - API VETERINÁRIA
+====================================
+
+🟢 INICIAR
+docker-compose up -d
+python test_all_endpoints.py
+
+🟡 VERIFICAR
+http://localhost:8000
+http://localhost:8000/docs
+
+🔴 PARAR
+docker-compose down
+
+✅ SUCESSO ESPERADO
+Taxa de sucesso: 100.0% - EXCELENTE!
+
+📱 CONTATOS DE TESTE
+Usuário: admin
+Senha: admin123
