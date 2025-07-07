@@ -214,39 +214,15 @@ cd veterinaria-api
 cp .env.example .env
 ```
 
-**Conteúdo do `.env`:**
-```env
-# Configurações do banco de dados
-DATABASE_URL=postgresql://postgres:veterinaria123@localhost:5432/veterinaria_db
-
-# Configurações PostgreSQL
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=veterinaria123
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
-POSTGRES_DB=veterinaria_db
-
-# Configurações da aplicação
-ENVIRONMENT=development
-DEBUG=true
-APP_NAME="API de Gerenciamento de Clínicas Veterinárias"
-APP_VERSION="2.0.0"
-
-# Configurações JWT
-SECRET_KEY=sua-chave-secreta-super-segura-aqui
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-```
-
 ## 🐳 Docker Setup
 
 ### **Método 1: Docker Compose (Recomendado)**
 ```bash
 # Construir e iniciar todos os serviços
-docker-compose up --build
+docker-compose up -d  --build
 
-# Executar em background
-docker-compose up -d
+# Executar teste de simulação de todos os endpoints
+python test_all_endpoints.py
 
 # Parar serviços
 docker-compose down
@@ -255,76 +231,7 @@ docker-compose down
 docker-compose logs -f app
 ```
 
-### **Método 2: Docker Manual**
-```bash
-# Construir imagem
-docker build -t veterinaria-api .
-
-# Executar PostgreSQL
-docker run -d --name veterinaria-db \
-  -e POSTGRES_DB=veterinaria_db \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD=veterinaria123 \
-  -p 5432:5432 \
-  postgres:16-alpine
-
-# Executar aplicação
-docker run -d --name veterinaria-app \
-  --link veterinaria-db:db \
-  -p 8000:8000 \
-  veterinaria-api
-```
-
-## 🔧 Instalação Manual
-
-### **Passo 3: Criar Ambiente Virtual**
-```bash
-# Criar ambiente virtual
-python -m venv venv
-
-# Ativar ambiente virtual
-# Windows
-venv\Scripts\Activate.ps1
-# Linux/macOS
-source venv/bin/activate
-```
-
-### **Passo 4: Instalar Dependências**
-```bash
-# Opção 1: Instalação básica (recomendado para começar)
-pip install -r requirements.txt
-
-# Opção 2: Instalação para desenvolvimento (inclui ferramentas)
-pip install -r requirements-dev.txt
-
-# Opção 3: Instalação para produção (apenas essenciais)
-pip install -r requirements-prod.txt
-
-# Opção 4: Instalação individual (se necessário)
-pip install fastapi uvicorn sqlalchemy psycopg2-binary pydantic email-validator
-```
-
-### **Passo 5: Configurar PostgreSQL**
-
-#### **Opção A: Configuração Automática**
-```bash
-python setup_postgres.py
-```
-
-#### **Opção B: Configuração Manual**
-```sql
--- Conectar ao PostgreSQL
-psql -U postgres
-
--- Criar banco de dados
-CREATE DATABASE veterinaria_db;
-
--- Verificar criação
-\l
-\q
-```
-
-### **Passo 6: Inicializar e Popular Banco**
+### **Passo 6: Inicializar e Popular Banco(opcional)**
 ```bash
 # Criar tabelas e popular com dados de exemplo
 python populate_db.py
@@ -337,10 +244,14 @@ python init_db.py
 
 ### **Método 1: Docker Compose (Recomendado)**
 ```bash
-# Iniciar todos os serviços
-docker-compose up -d
 
-# Ver logs em tempo real
+# Construir e iniciar todos os serviços
+docker-compose up -d  --build
+
+# Executar teste de simulação de todos os endpoints 
+python test_all_endpoints.py
+
+# Ver logs em tempo real(opcional)
 docker-compose logs -f
 
 # Parar serviços
@@ -356,8 +267,8 @@ source venv/bin/activate  # Linux/macOS
 # Executar servidor de desenvolvimento
 python -m uvicorn main:app --reload
 
-# Executar com configurações específicas
-python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+# Executar teste de simulação de todos os endpoints 
+python test_all_endpoints.py
 ```
 
 ### **Método 3: Validação de Startup**
